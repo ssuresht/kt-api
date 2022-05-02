@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\v1\Student\MediaPostsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\Student\AuthController;
 use App\Http\Controllers\Api\v1\ForgotPasswordController;
+use App\Http\Controllers\Api\v1\Student\ContactUsController;
 
 
 Route::post('/log-in', [StudentController::class, 'login']);
@@ -35,3 +36,4 @@ Route::group(['middleware' => 'auth:students'], function() {
     Route::post('applications/update', [ApplicationsController::class, 'update']);
 });
 
+Route::post('contact', [ContactUsController::class, 'store']);
