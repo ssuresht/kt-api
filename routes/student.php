@@ -1,0 +1,37 @@
+<?php
+
+use App\Http\Controllers\Api\v1\Student\ApplicationsController;
+use App\Http\Controllers\Api\v1\Student\FavoritesController;
+use App\Http\Controllers\Api\v1\FavoritesController as FavController;
+use App\Http\Controllers\Api\v1\Student\InternshipPostsController;
+use App\Http\Controllers\Api\v1\Student\PasswordResetController;
+use App\Http\Controllers\Api\v1\Student\StudentController;
+use App\Http\Controllers\Api\v1\Student\MediaPostsController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\v1\Student\AuthController;
+use App\Http\Controllers\Api\v1\ForgotPasswordController;
+
+
+Route::post('/log-in', [StudentController::class, 'login']);
+// Route::post('/logout', [StudentController::class, 'logout']);
+Route::post('/password-reset', [PasswordResetController::class, 'resetStudentPassword'])->name('studentPasswordReset');
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('resetPassword');
+Route::post('/forget-password', [ForgotPasswordController::class, 'studentForgot']);
+
+Route::post('/signup-request-email', [StudentController::class, 'store']);
+Route::post('/signup-request-token-check', [StudentController::class, 'storeTokenCheck']);
+Route::post('/signup', [StudentController::class, 'signup']);
+Route::get('show-sign-up-student/{id}', [StudentController::class, 'show']);
+Route::apiResource('internship-post', InternshipPostsController::class);
+Route::apiResource('media-posts', MediaPostsController::class)->only(['index', 'show']);
+Route::group(['middleware' => 'auth:students'], function() {
+    Route::post('/logout', [StudentController::class, 'logout']);
+    Route::apiResource('students', StudentController::class)->except('index','store');
+    Route::post('internship-favourite/{id}', FavoritesController::class);
+    Route::post('student/change_password', [AuthController::class, 'changePassword'])->name('studentChangePassword');
+    Route::post('basicInformation', [StudentController::class, 'update'])->name('updateInformation');
+    Route::apiResource('favorite', FavController::class);
+    Route::apiResource('applications', ApplicationsController::class)->only('store', 'index');
+    Route::post('applications/update', [ApplicationsController::class, 'update']);
+});
+
