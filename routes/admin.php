@@ -66,6 +66,7 @@ Route::group(['middleware' => 'auth:admins'], function() {
     Route::get('/export/application', [DataExportController::class, 'exportApplication']);
     Route::get('/export/company', [DataExportController::class, 'exportCompany']);
     Route::get('/export/student', [DataExportController::class, 'exportStudent']);
+    Route::get('/student-feedback/{student}', [StudentController::class, 'studentFeedback']);
 
 });
 

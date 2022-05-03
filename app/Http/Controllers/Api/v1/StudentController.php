@@ -15,8 +15,11 @@ use App\Mail\SignUpRequestMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\InternshipPosts;
 use App\Http\Resources\InternshipPostResource;
+use App\Models\Feedbacks;
 Use App\Traits\InternshipPostTrait;
 use FFI\Exception;
+use Illuminate\Support\Facades\DB;
+
 class StudentController extends Controller
 {
     use InternshipPostTrait;
@@ -274,5 +277,38 @@ class StudentController extends Controller
         } catch (Exception $th) {
             return $this->sendApiLogsAndShowMessage($th);
         }
+    }
+
+    public function studentFeedback(Students $student) {
+        $reviews = $this->generateRawSelectSql(["super_power_review", "growth_idea_review"]);
+        $feedbacks = DB::table('feedbacks')->select(DB::raw($reviews))
+                    ->where('student_id',$student->id)
+                    ->groupBy('company_id')
+                    ->first();
+        $companies = Feedbacks::select('company_id')->with('companies')->where('student_id', $student->id)->distinct()->get();
+        $comments = [];
+        foreach($companies as $company) {
+            $comment = Feedbacks::select('super_power_comment', 'growth_idea_comment','posted_month', 'id')
+                       ->where('company_id', $company->company_id)
+                       ->where('student_id', $student->id)
+                       ->get();
+            $temp = ['company_info' => $company->companies, 'comments' => $comment];
+            array_push($comments,$temp);
+        }
+        return $this->sendResponse([
+            'feedbacks' => $feedbacks,
+            'comments' => $comments
+        ]);
+        return '';
+    }
+    public function generateRawSelectSql($columnNames) {
+        $reviews = config("constants.reviews_option");
+        $statement = [];
+        foreach($columnNames as $columnName) {
+            foreach($reviews as $element) {
+                array_push($statement,"SUM(IF({$columnName} = {$element['id']}, 1, 0)) AS {$columnName}_{$element['id']}");
+            }
+        }
+        return implode(",", $statement);
     }
 }

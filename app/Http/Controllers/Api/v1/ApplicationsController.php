@@ -23,7 +23,7 @@ class ApplicationsController extends  Controller
 
     public function index(Request $request)
     {
-        $application = Applications::select('*')->with('company', 'student', 'internshipPost.company');
+        $application = Applications::select('*')->with('company', 'student', 'internshipPost.company')->orderBy($request->input('sort_by'), $request->input('sort_by_order'));
 
         $application = $request->input('paginate')
         ? $application->paginate($request->input('paginate', 25))

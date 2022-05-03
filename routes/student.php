@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\Student\AuthController;
 use App\Http\Controllers\Api\v1\ForgotPasswordController;
 use App\Http\Controllers\Api\v1\Student\ContactUsController;
-
+use App\Http\Controllers\Api\v1\Student\FeedbacksController;
 
 Route::post('/log-in', [StudentController::class, 'login']);
 // Route::post('/logout', [StudentController::class, 'logout']);
@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth:students'], function() {
     Route::apiResource('favorite', FavController::class);
     Route::apiResource('applications', ApplicationsController::class)->only('store', 'index');
     Route::post('applications/update', [ApplicationsController::class, 'update']);
+    Route::get('feedback', FeedbacksController::class);
 });
 
 Route::post('contact', [ContactUsController::class, 'store']);

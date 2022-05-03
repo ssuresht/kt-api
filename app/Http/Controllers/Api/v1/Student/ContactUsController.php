@@ -19,7 +19,7 @@ class ContactUsController extends Controller
 
             Mail::to($requestedData['email'])->send(new UserEmailContactUs($requestedData));
 
-             Mail::to($adminUser)->send(new AdminEmailContactUs($requestedData));
+            Mail::to($adminUser)->send(new AdminEmailContactUs($requestedData));
 
             return $this->sendResponse([
                 'message' => __('Thank you for contacting us.'),
