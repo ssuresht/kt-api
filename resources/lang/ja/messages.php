@@ -18,6 +18,7 @@ return [
     'something_goes_wrong' => '何かがおかしい！！',
     'no_admin_privileges' => 'ログイン権限がありません。管理者に問い合わせてください。',
     'record_already_exist' => 'Record already exists.',
-    'application_already_cancelled' => 'Application already cancelled.'
+    'application_already_cancelled' => 'Application already cancelled.',
+    'email_already_registered' => 'このメールアドレスはすでに使用されています。'
 
 ];

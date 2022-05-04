@@ -27,6 +27,7 @@ Route::apiResource('internship-post', InternshipPostsController::class);
 Route::apiResource('media-posts', MediaPostsController::class)->only(['index', 'show']);
 Route::group(['middleware' => 'auth:students'], function() {
     Route::post('/logout', [StudentController::class, 'logout']);
+    Route::post('/email-request-token-check', [StudentController::class, 'storeTokenEmailChange']);
     Route::apiResource('students', StudentController::class)->except('index','store');
     Route::post('internship-favourite/{id}', FavoritesController::class);
     Route::post('student/change_password', [AuthController::class, 'changePassword'])->name('studentChangePassword');

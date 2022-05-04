@@ -29,9 +29,8 @@ class EmailChangeMail extends Mailable
      */
     public function build()
     {    
-        Log::debug("dssss", [$this->data]);
         return $this->from('noreply@domain.com', 'Application')
-        ->subject('Student Email Change')
+        ->subject(' Email Change Request')
         ->view('email-template.email-change-student',['data'=>$this->data]); 
     }
 }

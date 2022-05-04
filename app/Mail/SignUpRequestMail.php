@@ -28,7 +28,7 @@ class SignUpRequestMail extends Mailable
      */
     public function build()
     {
-        return $this->from('noreply@domain.com', 'Application')
+        return $this->from('noreply@kotonaru.co.jp', 'Kotonaru')
         ->subject('【Kotonaru】 会員登録のご案内です')
         ->view('email-template.sign-up-request',['data'=>$this->data]); 
     }

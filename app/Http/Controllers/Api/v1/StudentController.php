@@ -82,6 +82,9 @@ class StudentController extends Controller
             });
         }
         $student->where('status', '=', $requestedData['status'] ?? 1);
+        $student->whereNotNull('email_valid');
+        $student->whereNotNull('student_internal_id');
+
         $student = $request->paginate
             ? $student->paginate($request->paginate)
             : $student->get();

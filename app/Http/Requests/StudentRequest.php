@@ -34,6 +34,7 @@ class StudentRequest extends BaseFormRequest
             'first_name' =>  ['nullable','string','max:30'],
             'family_name_furigana'=>  ['nullable','string','max:30'],
             'first_name_furigana'=>  ['nullable','string','max:30'],
+            'email_invalid' =>  ['nullable','email','unique:students,email_invalid'],
             'email_valid' =>  ['nullable','email','unique:students,email_valid'],
             'education_facility_id' =>  ['nullable','integer','exists:education_facilities,id'],
             'year' =>  ['nullable','integer','digits:4','min:1900'],
