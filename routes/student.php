@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:students'], function() {
     Route::apiResource('applications', ApplicationsController::class)->only('store', 'index');
     Route::post('applications/update', [ApplicationsController::class, 'update']);
     Route::get('feedback', FeedbacksController::class);
+    Route::put('update-membership/{userId}', [StudentController::class, 'updateMembership']);
 });
 
 Route::post('contact', [ContactUsController::class, 'store']);

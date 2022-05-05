@@ -28,9 +28,13 @@ class StudentController extends Controller
     public function login(StudentRequest $request)
     {
         $requestedData = $request->validated();
-        $student = Students::with('educationFacility')->where('email_valid', '=', $requestedData['email'])->first();
+        $student = Students::with('educationFacility')->where('email_valid', '=', $requestedData['email'])->where('status',1)->first();
 
         try {
+            if($student->status == 3){
+                 return $this->sendError(__('message.membership_cancelled'), 401);
+            }
+
             if ($student && Hash::check($requestedData['password'], $student->password)) {
                 $token = $student->createToken('student')->plainTextToken;
 
@@ -260,9 +264,7 @@ class StudentController extends Controller
         }
     }
 
-
-     ///Email Change Request from Student from my profile
-
+    //Email Change Request from Student from my profile
     public function storeTokenEmailChange(Request $request)
     {
 
@@ -332,6 +334,25 @@ class StudentController extends Controller
                 ],
             ]);
         } catch (Exception $th) {
+            return $this->sendApiLogsAndShowMessage($th);
+        }
+    }
+
+    public function updateMembership(Request $request, $userId)
+    {
+        try {
+
+            $data = [
+                'status' => $request->status,
+                'reason_for_withdrawal' => $request->reason
+            ];
+
+            Students::where('id', $userId)->update($data);
+
+            return $this->sendResponse([
+                'message' => __('Update Membership.'),
+            ]);
+        } catch (\Throwable $th) {
             return $this->sendApiLogsAndShowMessage($th);
         }
     }

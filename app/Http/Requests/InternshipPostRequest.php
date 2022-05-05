@@ -9,7 +9,7 @@ class InternshipPostRequest extends BaseFormRequest
         return [
             'paginate' => ['sometimes', 'required', 'integer', 'gte:0'],
             'page' => ['sometimes', 'required', 'integer', 'gt:0'],
-            'sort_by' => ['sometimes', 'required', 'string', 'in:id,created_at,public_date,favorites_count,applications_count'],
+            'sort_by' => ['sometimes', 'required', 'string', 'in:id,created_at,public_date,favorites_count,applications_count,display_order,public_date'],
             'sort_by_order' => ['required_with:sort_by', 'string', 'in:asc,desc'],
             'status' => ['sometimes', 'string', 'in:Y,N'],
             'search' => ['sometimes', 'string'],

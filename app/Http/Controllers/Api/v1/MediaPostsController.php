@@ -10,10 +10,21 @@ use App\Models\MediaPosts;
 use App\Traits\EditorContentTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ImageUploadService;
+
+
 
 class MediaPostsController extends Controller
 {
     use EditorContentTrait;
+
+    protected $imageUploadService;
+
+    public function __construct(ImageUploadService $imageUploadService)
+    {
+        $this->imageUploadService = $imageUploadService;
+    }
+
     /**
      * Media Posts List.
      * @group Media Posts
@@ -77,10 +88,19 @@ class MediaPostsController extends Controller
 
             if ($file = $request->file('seo_featured_image')) {
                 $path = config('constants.media_images_path');
-                $imageName = uniqid() . '.' . $file->extension();
+                $uniqId = uniqid();
+                $imageName = $uniqId . '.' . $file->extension();
                 $fullPathName = $path . $imageName;
                 Storage::disk('s3')->putFileAs($path, $file, $imageName);
                 $mediaPost->seo_featured_image = $fullPathName;
+
+                $thumbName = $uniqId. '_400_215.' . $file->extension();
+                $thumbnailFullPathName = $path . $thumbName;
+                $thumbResponse = $this->imageUploadService->getThumbnail($file,$thumbnailFullPathName);
+
+                if($thumbResponse){
+                    $mediaPost->seo_featured_image_thumbnail = $thumbnailFullPathName;
+                }
             }
 
             $mediaPost->title = $request->title;
@@ -172,10 +192,19 @@ class MediaPostsController extends Controller
 
             if ($file = $request->file('seo_featured_image')) {
                 $path = config('constants.media_images_path');
-                $imageName = uniqid() . '.' . $file->extension();
+                $uniqId = uniqid();
+                $imageName = $uniqId . '.' . $file->extension();
                 $fullPathName = $path . $imageName;
                 Storage::disk('s3')->putFileAs($path, $file, $imageName);
                 $mediaPost->seo_featured_image = $fullPathName;
+
+                $thumbName = $uniqId. '_400_215.' . $file->extension();
+                $thumbnailFullPathName = $path . $thumbName;
+                $thumbResponse = $this->imageUploadService->getThumbnail($file,$thumbnailFullPathName);
+
+                if($thumbResponse){
+                    $mediaPost->seo_featured_image_thumbnail = $thumbnailFullPathName;
+                }
             }
 
             $imagePath = config('constants.media_images_content_path');

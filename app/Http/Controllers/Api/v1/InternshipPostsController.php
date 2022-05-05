@@ -12,10 +12,19 @@ use App\Traits\EditorContentTrait;
 use App\Traits\InternshipPostTrait;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use App\Services\ImageUploadService;
+
 class InternshipPostsController extends Controller
 {
     use InternshipPostTrait;
     use EditorContentTrait;
+
+    protected $imageUploadService;
+
+    public function __construct(ImageUploadService $imageUploadService)
+    {
+        $this->imageUploadService = $imageUploadService;
+    }
 
     /**
      * Display a listing of the resource.
@@ -73,10 +82,21 @@ class InternshipPostsController extends Controller
 
             if ($file = $request->file('seo_featured_image')) {
                 $path = config('constants.internship_images_path');
-                $imageName = uniqid() . '.' . $file->extension();
+
+                $uniqId = uniqid();
+                $imageName = $uniqId. '.' . $file->extension();
                 $fullPathName = $path . $imageName;
+                
                 Storage::disk('s3')->putFileAs($path, $file, $imageName);
                 $post->seo_featured_image = $fullPathName;
+
+                $thumbName = $uniqId. '_400_215.' . $file->extension();
+                $thumbnailFullPathName = $path . $thumbName;
+                $thumbResponse = $this->imageUploadService->getThumbnail($file,$thumbnailFullPathName);
+
+                if($thumbResponse){
+                    $post->seo_featured_image_thumbnail = $thumbnailFullPathName;
+                }
             }
 
             $post->save();
@@ -94,6 +114,7 @@ class InternshipPostsController extends Controller
             return $this->sendResponse([
                 'message' => __('messages.saved_success'),
                 'data' => new InternshipPostResource($post),
+                'thumbResponse' => $thumbResponse
             ]);
 
         } catch (\Throwable$th) {
@@ -162,10 +183,22 @@ class InternshipPostsController extends Controller
                     Storage::disk('s3')->delete($post->seo_featured_image);
                 }
                 $path = config('constants.internship_images_path');
-                $imageName = uniqid() . '.' . $file->extension();
+
+                $uniqId = uniqid();
+                $imageName = $uniqId. '.' . $file->extension();
                 $fullPathName = $path . $imageName;
+                
                 Storage::disk('s3')->putFileAs($path, $file, $imageName);
                 $post->seo_featured_image = $fullPathName;
+
+                $thumbName = $uniqId. '_400_215.' . $file->extension();
+                $thumbnailFullPathName = $path . $thumbName;
+                $thumbResponse = $this->imageUploadService->getThumbnail($file,$thumbnailFullPathName);
+                if($thumbResponse){
+                    $post->seo_featured_image_thumbnail = $thumbnailFullPathName;
+                }
+
+                $this->getThumbnail($file,$path,$thumbName,$file->extension());
             }
 
             $post->save();
