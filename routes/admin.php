@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth:admins'], function() {
     Route::post('/admin/create', [AdminController::class, 'store']);
     Route::apiResource('work-category', WorkCategoriesController::class);
     Route::apiResource('internship-feature', InternshipFeatureController::class);
+    Route::post('/email-check', [AdminController::class, 'emailCheck']);
     Route::apiResource('admin', AdminController::class);
     Route::apiResource('media-post', MediaPostsController::class);
     Route::apiResource('media-tag', MediaTagsController::class);

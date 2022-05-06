@@ -8,6 +8,7 @@ use App\Models\InternshipFeatures;
 use App\Models\InternshipPosts;
 use App\Models\Students;
 use App\Models\WorkCategories;
+use App\Models\Applications;
 
 class MasterController extends Controller
 {
@@ -19,6 +20,7 @@ class MasterController extends Controller
         $businessIndustories = BusinessIndustries::all();
         $internPosts = InternshipPosts::where('status', 0)->count();
         $total_students = Students::count();
+        $totalUnreadApplications = Applications::where('is_admin_read', '=', 0)->count();
 
         $data = [
             'total_companies' => $totalCompanies,
@@ -34,6 +36,7 @@ class MasterController extends Controller
             'reviews_option' => config('constants.reviews_option'),
             'internship_posts_count' => $internPosts,
             'total_students'        => $total_students,
+            'total_unread_applications'  => $totalUnreadApplications,
         ];
         return $this->sendResponse($data);
     }

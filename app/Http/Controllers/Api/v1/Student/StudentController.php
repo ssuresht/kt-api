@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Models\StudentEmailChangeRequest;
+
 class StudentController extends Controller
 {
     use InternshipPostTrait;
@@ -28,11 +29,11 @@ class StudentController extends Controller
     public function login(StudentRequest $request)
     {
         $requestedData = $request->validated();
-        $student = Students::with('educationFacility')->where('email_valid', '=', $requestedData['email'])->where('status',1)->first();
+        $student = Students::with('educationFacility')->where('email_valid', '=', $requestedData['email'])->where('status', 1)->first();
 
         try {
-            if($student->status == 3){
-                 return $this->sendError(__('message.membership_cancelled'), 401);
+            if ($student->status == 3) {
+                return $this->sendError(__('message.membership_cancelled'), 401);
             }
 
             if ($student && Hash::check($requestedData['password'], $student->password)) {
@@ -225,45 +226,69 @@ class StudentController extends Controller
             $student = Students::findOrFail($id);
             $student->family_name = $requestedData['family_name'] ?? $student->family_name;
             $student->first_name = $requestedData['first_name'] ?? $student->first_name;
-            $student->family_name_furigana = $requestedData['family_name_furigana'] ?? $student->family_name_furigana ;
-            $student->first_name_furigana = $requestedData['first_name_furigana'] ?? $student->first_name_furigana ;
+            $student->family_name_furigana = $requestedData['family_name_furigana'] ?? $student->family_name_furigana;
+            $student->first_name_furigana = $requestedData['first_name_furigana'] ?? $student->first_name_furigana;
             $student->email_invalid = $requestedData['email_invalid'] ?? $student->email_invalid;
             $student->education_facility_id = $requestedData['education_facility_id'] ?? $student->education_facility_id;
-            $student->graduate_year = $requestedData['year'] ?? $student->graduate_year ;
-            $student->graduate_month = $requestedData['month'] ?? $student->month ;
+            $student->graduate_year = $requestedData['year'] ?? $student->graduate_year;
+            $student->graduate_month = $requestedData['month'] ?? $student->graduate_month;
             $student->self_introduction = $requestedData['self_introduction'] ?? $student->self_introduction;
-            $student->status = $requestedData['status'] ?? $student->status ;
+            $student->status = $requestedData['status'] ?? $student->status;
             $student->save();
             $student->student_internal_id = GetInternalId::get_internal_student_id($student->id, $student->created_at);
             $student->save();
-
-     if ( isset ( $requestedData['email_invalid'])) {
-
-        $token = Str::random(60);
-        $emailChangeToken = new StudentEmailChangeRequest();
-        $emailChangeToken->email = $requestedData['email_invalid'];
-        $emailChangeToken->token = $token;
-        $emailChangeToken->save();
-           #NOTE: local test link
-          // $emailChangeTokenUrl = "http://localhost:8080/mypage?token=" . $token;
-           #NOTE: staging test link
-         $emailChangeTokenUrl =  $_ENV['STUDENT_EMAIL_CHANGE_MYPAGE'].'=' . $token;
-        $data = [
-            'student' => $student,
-            'url' => $emailChangeTokenUrl,
-        ];
-        Mail::to( $requestedData['email_invalid'])->send( new EmailChangeMail($data));
-       }
             return $this->sendResponse([
                 'message' => __('messages.update_success'),
                 'data' => new StudentsResource($student),
             ]);
-        }
-         catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return $this->sendApiLogsAndShowMessage($th);
         }
     }
 
+    public function sendTokenEmailChange(StudentRequest $request , $id)
+    {
+        try {
+            $requestedData = $request->validated();
+            $student = Students::findOrFail($id);
+            $checkEmailInRequestEmailToken = StudentEmailChangeRequest::where('email', $requestedData['email_invalid'])->first();
+            if ($checkEmailInRequestEmailToken) {
+                $token = $checkEmailInRequestEmailToken->token;
+                $student->email_invalid = $requestedData['email_invalid'];
+                $student->save();
+               // $emailChangeTokenUrl = "https://stg.kotonaru.co.jp/mypage?token=" . $token;
+                #NOTE: staging test link
+               $emailChangeTokenUrl =  $_ENV['USER_SITE_URL'].'/mypage?token=' . $token;
+                $data = [
+                    'student' => $student,
+                    'url' => $emailChangeTokenUrl,
+                ];
+                Mail::to($requestedData['email_invalid'])->send(new EmailChangeMail($data));
+            } else {
+                $token = Str::random(60);
+                $emailChangeToken = new StudentEmailChangeRequest();
+                $emailChangeToken->email = $requestedData['email_invalid'];
+                $emailChangeToken->token = $token;
+                $emailChangeToken->save();
+                $student->email_invalid = $requestedData['email_invalid'];
+                $student->save();
+                $emailChangeTokenUrl =$_ENV['USER_SITE_URL'].'/mypage?token=' . $token;
+                #NOTE: staging test link
+                //  $emailChangeTokenUrl =  $_ENV['STUDENT_EMAIL_CHANGE_MYPAGE'].'=' . $token;
+                $data = [
+                    'student' => $student,
+                    'url' => $emailChangeTokenUrl,
+                ];
+                Mail::to($requestedData['email_invalid'])->send(new EmailChangeMail($data));
+            }
+            return $this->sendResponse([
+                'message' => __('messages.update_success'),
+                'data' => new StudentsResource($student),
+            ]);
+        } catch (\Throwable $th) {
+            return $this->sendApiLogsAndShowMessage($th);
+        }
+    }
     //Email Change Request from Student from my profile
     public function storeTokenEmailChange(Request $request)
     {
@@ -278,10 +303,10 @@ class StudentController extends Controller
                     $student = Students::where('email_invalid', $requestEmailToken->email)->first();
                     if ($student) {
                         $student->email_valid = $student->email_invalid;
-                        $student->save();           
-                                     
+                        $student->is_email_approved = 1;    
+                        $student->save();
                         #NOTE: token table Update
-                        $requestEmailToken->is_used= 1;
+                        $requestEmailToken->is_used = 1;
                         $requestEmailToken->save();
                         return $this->sendResponse([
                             'message' => __('messages.record_created_successfully'),

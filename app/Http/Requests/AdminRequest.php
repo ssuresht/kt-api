@@ -29,4 +29,12 @@ class AdminRequest extends BaseFormRequest
             'status' => ['required', 'boolean'],
         ];
     }
+
+    public function emailCheckRules()
+    {
+        return [
+            'email' => ['required', 'email'],
+        ];
+    }
+    
 }

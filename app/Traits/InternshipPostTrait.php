@@ -21,8 +21,8 @@ trait InternshipPostTrait
             ->when($request->input('status'), function ($query, $status) {
                 $query->where('status', $status == 'Y' ? '1' : '0');
             })
-            ->when($request->input('draft_or_public'), function ($query, $draft_or_public) {
-                $query->where('draft_or_public', $draft_or_public == 'draft' ? 0 : 1);
+            ->when($request->input('draft_or_public'), function ($query, $draftOrPublic) {
+                $query->where('draft_or_public', $draftOrPublic == 'draft' ? '0' : '1');
             })
             ->when($request->input('search'), function ($query, $search) {
                 $query->where('title', 'LIKE', "%$search%");

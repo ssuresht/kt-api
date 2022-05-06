@@ -73,4 +73,11 @@ class StudentRequest extends BaseFormRequest
             'search' => ['sometimes', 'string'],
         ];
     }
+
+    public function sendTokenEmailChangeRules()
+    {
+        return [
+            'email_invalid' =>  ['required', 'email'],
+        ];
+    }
 }

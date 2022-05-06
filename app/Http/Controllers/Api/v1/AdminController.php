@@ -128,6 +128,27 @@ class AdminController extends Controller
         }
     }
 
+
+    function emailCheck(AdminRequest $request )
+    {
+  
+     $requestedData = $request->validated();
+      $email = requestedData['email'];
+      $data = Admin::where('email', $email)
+              ->count();
+      if($data > 0){
+        return $this->sendResponse([
+            'message' => __('messages.not available'),
+        ]);
+      }
+      else{
+        return $this->sendResponse([
+            'message' => __('messages.This_email_address_is_already_in_use'),
+        ]);
+      }
+     
+    }
+
     public function destroy($id)
     {
         try {

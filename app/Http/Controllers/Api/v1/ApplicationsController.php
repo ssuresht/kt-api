@@ -23,7 +23,25 @@ class ApplicationsController extends  Controller
 
     public function index(Request $request)
     {
-        $application = Applications::select('*')->with('company', 'student', 'internshipPost.company')->orderBy($request->input('sort_by'), $request->input('sort_by_order'));
+        $application = Applications::select('*')->with('company', 'student', 'internshipPost.company','student.educationFacility')->where('status', $request->input('status',1))->orderBy($request->input('sort_by'), $request->input('sort_by_order'));
+		
+		 $application->when($request->input('search'), function ($query, $search) {
+                $query->where('id', 'LIKE', "%$search%");
+				$query->orWhereHas('company', function($query) use ($search) {
+                    $query->where('name', 'LIKE', "%$search%");
+                    $query->orWhere('internal_company_id', 'LIKE', "%$search%");
+                });
+				$query->orWhereHas('student', function($query) use ($search) {
+                    $query->where('student_internal_id', 'LIKE', "%$search%");
+                    $query->orWhere('family_name', 'LIKE', "%$search%");
+                    $query->orWhere('first_name', 'LIKE', "%$search%");
+                    $query->orWhere('email_valid', 'LIKE', "%$search%");
+                });
+            });
+		$application->when($request->input('date_from'), function ($query) use ($request) {
+                $query->where('created_at', '>=', $request->date_from);
+                $query->where('created_at', '<=', $request->date_to);
+         });	
 
         $application = $request->input('paginate')
         ? $application->paginate($request->input('paginate', 25))
@@ -32,9 +50,34 @@ class ApplicationsController extends  Controller
         try {
 
             return $this->sendResponse([
-                'message' => __('messages.show_all_success'),
-                'data' => ApplicationsResource::collection($application),
-                'paginate' => $request->input('paginate') ?  new PaginationResource($application): ''
+                'message' 	=> __('messages.show_all_success'),
+                'data' 		=> ApplicationsResource::collection($application),
+                'paginate' 	=> $request->input('paginate') ?  new PaginationResource($application): '',
+				/* 'counts'	=> [
+					'total_applied' => Applications::select('*')->where('status', 1)->count(),
+				] */
+				'counts' 	=> [
+                    [
+					'total_applied' => Applications::select('*')->where('status', 1)->count(),
+					'admin_read' 	=> Applications::select('*')->where('status', 1)->where('is_admin_read', 0)->count(),
+					],
+					[
+					'total_passed' => Applications::select('*')->where('status', 2)->count(),
+					'admin_read' 	=> Applications::select('*')->where('status', 2)->where('is_admin_read', 0)->count(),
+					],
+                    [
+					'total_completed' => Applications::select('*')->where('status', 3)->count(),
+					'admin_read' 	=> Applications::select('*')->where('status', 3)->where('is_admin_read', 0)->count(),
+					],
+					[
+					'total_failed' => Applications::select('*')->where('status', 4)->count(),
+					'admin_read' 	=> Applications::select('*')->where('status', 4)->where('is_admin_read', 0)->count(),
+					],
+                    [
+					'total_declined' => Applications::select('*')->where('status', 5)->count(),
+					'admin_read' 	=> Applications::select('*')->where('status', 5)->where('is_admin_read', 0)->count(),
+					],
+                ],
             ]);
         } catch (\Throwable $th) {
             return $this->sendApiLogsAndShowMessage($th);

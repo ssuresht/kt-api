@@ -42,7 +42,7 @@ class ForgotPasswordController extends Controller {
        $message->from('admin@motocle5.sakura.ne.jp','Kotonaru 管理者サイト');
     });
 
-    return response()->json(['token' => $token], 200);
+    return response()->json(['token' => $token ], 200);
   }
 
 

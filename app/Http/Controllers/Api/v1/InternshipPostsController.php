@@ -90,7 +90,7 @@ class InternshipPostsController extends Controller
                 Storage::disk('s3')->putFileAs($path, $file, $imageName);
                 $post->seo_featured_image = $fullPathName;
 
-                $thumbName = $uniqId. '_400_215.' . $file->extension();
+                $thumbName = $uniqId. '_thumbnail.' . $file->extension();
                 $thumbnailFullPathName = $path . $thumbName;
                 $thumbResponse = $this->imageUploadService->getThumbnail($file,$thumbnailFullPathName);
 
@@ -113,8 +113,7 @@ class InternshipPostsController extends Controller
 
             return $this->sendResponse([
                 'message' => __('messages.saved_success'),
-                'data' => new InternshipPostResource($post),
-                'thumbResponse' => $thumbResponse
+                'data' => new InternshipPostResource($post), // required for UI
             ]);
 
         } catch (\Throwable$th) {
@@ -182,6 +181,10 @@ class InternshipPostsController extends Controller
                 if (Storage::disk('s3')->exists($post->seo_featured_image)) {
                     Storage::disk('s3')->delete($post->seo_featured_image);
                 }
+
+                if (Storage::disk('s3')->exists($post->seo_featured_image_thumbnail)) {
+                    Storage::disk('s3')->delete($post->seo_featured_image_thumbnail);
+                }
                 $path = config('constants.internship_images_path');
 
                 $uniqId = uniqid();
@@ -191,14 +194,12 @@ class InternshipPostsController extends Controller
                 Storage::disk('s3')->putFileAs($path, $file, $imageName);
                 $post->seo_featured_image = $fullPathName;
 
-                $thumbName = $uniqId. '_400_215.' . $file->extension();
+                $thumbName = $uniqId. '_thumbnail.' . $file->extension();
                 $thumbnailFullPathName = $path . $thumbName;
                 $thumbResponse = $this->imageUploadService->getThumbnail($file,$thumbnailFullPathName);
                 if($thumbResponse){
                     $post->seo_featured_image_thumbnail = $thumbnailFullPathName;
                 }
-
-                $this->getThumbnail($file,$path,$thumbName,$file->extension());
             }
 
             $post->save();
@@ -207,7 +208,7 @@ class InternshipPostsController extends Controller
 
             return $this->sendResponse([
                 'message' => __('messages.update_success'),
-                'data' => new InternshipPostResource($post),
+                'data' => new InternshipPostResource($post), // required for UI
             ]);
 
         } catch (\Throwable$th) {

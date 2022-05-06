@@ -20,6 +20,7 @@ return [
     'record_already_exist' => 'Record already exists.',
     'application_already_cancelled' => 'Application already cancelled.',
     'email_already_registered' => 'このメールアドレスはすでに使用されています。',
-    'membership_cancelled' => 'メンバーシップがキャンセルされました'
+    'membership_cancelled' => 'メンバーシップがキャンセルされました',
+    "This_email_address_is_already_in_use"=>"このメールアドレスはすでに使用されています。"
 
 ];

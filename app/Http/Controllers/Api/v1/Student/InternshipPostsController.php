@@ -27,7 +27,7 @@ class InternshipPostsController extends Controller
         try {
 
             $authUser = Auth::guard('students')->user();
-            $request->request->add(['draft_or_public' => 'public']);
+            $request->merge(['draft_or_public'=> 'public']);
             $posts = $this->getInternshipPostListing($request, $authUser); // Default Order;
 
             return $this->sendResponse([
@@ -67,7 +67,9 @@ class InternshipPostsController extends Controller
                     $query->where('student_id', $authUser->id ?? 0);
                     $query->where('cancel_status', 0);
                 },
-            ])->find($id);
+            ])
+            ->whereIn('draft_or_public', request()->get('preview') ? ['0', '1'] : ['1'])
+            ->find($id);
 
             if (!$post) {
                 return $this->sendResponse([

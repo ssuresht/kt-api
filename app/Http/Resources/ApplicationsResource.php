@@ -28,6 +28,16 @@ class ApplicationsResource extends JsonResource
             }
             $response['internship_post'] = $internship;
         }
+		$response['student']['obfuscate_email'] = isset($response['student']['email_valid']) && $response['student']['email_valid'] != '' ? $this->obfuscateEmail($response['student']['email_valid']) : '';
         return $response;
+    }
+	private function obfuscateEmail($input, $show = 3)
+    {
+        $arr = explode('@', $input);
+
+        $email = substr($arr[0], 0, $show) . str_repeat('*', strlen($arr[0]) - $show);
+        $host = substr($arr[1], 0, $show) . str_repeat('*', strlen($arr[1]) - $show);
+
+        return $email . '@' . $host;
     }
 }

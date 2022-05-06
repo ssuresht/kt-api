@@ -25,10 +25,11 @@ Route::post('/signup', [StudentController::class, 'signup']);
 Route::get('show-sign-up-student/{id}', [StudentController::class, 'show']);
 Route::apiResource('internship-post', InternshipPostsController::class);
 Route::apiResource('media-posts', MediaPostsController::class)->only(['index', 'show']);
-Route::group(['middleware' => 'auth:students'], function() {
+Route::group(['middleware' => 'auth:students'], function () {
     Route::post('/logout', [StudentController::class, 'logout']);
     Route::post('/email-request-token-check', [StudentController::class, 'storeTokenEmailChange']);
-    Route::apiResource('students', StudentController::class)->except('index','store');
+    Route::post('/send-email-change-request-token/{id}', [StudentController::class, 'sendTokenEmailChange']);
+    Route::apiResource('students', StudentController::class)->except('index', 'store');
     Route::post('internship-favourite/{id}', FavoritesController::class);
     Route::post('student/change_password', [AuthController::class, 'changePassword'])->name('studentChangePassword');
     Route::post('basicInformation', [StudentController::class, 'update'])->name('updateInformation');

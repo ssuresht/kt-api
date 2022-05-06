@@ -94,7 +94,7 @@ class MediaPostsController extends Controller
                 Storage::disk('s3')->putFileAs($path, $file, $imageName);
                 $mediaPost->seo_featured_image = $fullPathName;
 
-                $thumbName = $uniqId. '_400_215.' . $file->extension();
+                $thumbName = $uniqId. '_thumbnail.' . $file->extension();
                 $thumbnailFullPathName = $path . $thumbName;
                 $thumbResponse = $this->imageUploadService->getThumbnail($file,$thumbnailFullPathName);
 
@@ -198,7 +198,7 @@ class MediaPostsController extends Controller
                 Storage::disk('s3')->putFileAs($path, $file, $imageName);
                 $mediaPost->seo_featured_image = $fullPathName;
 
-                $thumbName = $uniqId. '_400_215.' . $file->extension();
+                $thumbName = $uniqId. '_thumbnail.' . $file->extension();
                 $thumbnailFullPathName = $path . $thumbName;
                 $thumbResponse = $this->imageUploadService->getThumbnail($file,$thumbnailFullPathName);
 
