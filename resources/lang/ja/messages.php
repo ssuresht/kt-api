@@ -21,6 +21,6 @@ return [
     'application_already_cancelled' => 'Application already cancelled.',
     'email_already_registered' => 'このメールアドレスはすでに使用されています。',
     'membership_cancelled' => 'メンバーシップがキャンセルされました',
-    "This_email_address_is_already_in_use"=>"このメールアドレスはすでに使用されています。"
+    "This_e_mail_address_is_not_registered"=>"このメールアドレスはすでに使用されています。"
 
 ];

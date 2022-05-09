@@ -19,6 +19,8 @@ class MediaPostResource extends JsonResource
 
         $response['seo_featured_image'] = isset($this->seo_featured_image) && $this->seo_featured_image != '' ? Storage::disk('s3')->url($this->seo_featured_image) : null;
 
+        $response['seo_featured_image_thumbnail'] = isset($this->seo_featured_image_thumbnail) && $this->seo_featured_image_thumbnail != '' ? Storage::disk('s3')->url($this->seo_featured_image_thumbnail) : null;
+
         return $response;
     }
 }

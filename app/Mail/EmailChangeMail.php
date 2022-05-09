@@ -29,8 +29,8 @@ class EmailChangeMail extends Mailable
      */
     public function build()
     {    
-        return $this->from('noreply@domain.com', 'Application')
-        ->subject(' Email Change Request')
+        return $this->from('noreply@kotonaru.co.jp', 'Kotonaru')
+        ->subject('【Kotonaru】 メールアドレス変更のお手続き')
         ->view('email-template.email-change-student',['data'=>$this->data]); 
     }
 }

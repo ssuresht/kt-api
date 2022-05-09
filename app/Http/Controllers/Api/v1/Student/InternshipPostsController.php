@@ -50,6 +50,7 @@ class InternshipPostsController extends Controller
     public function show($id)
     {
         try {
+            $request = request();
             $authUser = Auth::guard('students')->user();
 
             $post = InternshipPosts::with([
@@ -68,8 +69,10 @@ class InternshipPostsController extends Controller
                     $query->where('cancel_status', 0);
                 },
             ])
-            ->whereIn('draft_or_public', request()->get('preview') ? ['0', '1'] : ['1'])
-            ->find($id);
+            ->whereIn('draft_or_public', $request->get('preview') ? ['0', '1'] : ['1'])
+            ->where('id', $id)
+            ->where('title', $request->get('title'))
+            ->first();
 
             if (!$post) {
                 return $this->sendResponse([

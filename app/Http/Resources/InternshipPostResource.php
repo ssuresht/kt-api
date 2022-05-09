@@ -20,6 +20,7 @@ class InternshipPostResource extends JsonResource
         $response['company'] = $this->whenLoaded('company', new CompanyResource($this->company));
 
         $response['seo_featured_image'] = isset($this->seo_featured_image) && $this->seo_featured_image != '' ? Storage::disk('s3')->url($this->seo_featured_image) : null;
+        $response['seo_featured_image_thumbnail'] = isset($this->seo_featured_image_thumbnail) && $this->seo_featured_image_thumbnail != '' ? Storage::disk('s3')->url($this->seo_featured_image_thumbnail) : null;
 
         $response['period_value'] = collect(config('constants.period'))->where('id', $this->period)->first() ?? '-';
         $response['workload_value'] = collect(config('constants.workload'))->where('id', $this->workload)->first() ?? '-';

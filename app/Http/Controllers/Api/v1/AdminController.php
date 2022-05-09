@@ -16,7 +16,7 @@ class AdminController extends Controller
             #NOTE: Validate input request
             $requestedData = $request->validated();
 
-            $admin = Admin::where('email', '=', request('email'))->first();
+            $admin = Admin::where('email', '=', request('email'))->where('status',1)->first();
 
             if ($admin && Hash::check($requestedData['password'], $admin->password)) {
                 $token = $admin->createToken('admin')->plainTextToken;
@@ -94,8 +94,7 @@ class AdminController extends Controller
             if ($admin) {
                 return $this->sendResponse([
                     new AdminResource($admin),
-                    'message' => __('messages.data_found'),
-                    
+                    'message' => __('messages.data_found'),   
                 ]);
             }
 
@@ -133,7 +132,7 @@ class AdminController extends Controller
     {
   
      $requestedData = $request->validated();
-      $email = requestedData['email'];
+      $email = $requestedData['email'];
       $data = Admin::where('email', $email)
               ->count();
       if($data > 0){
@@ -143,7 +142,7 @@ class AdminController extends Controller
       }
       else{
         return $this->sendResponse([
-            'message' => __('messages.This_email_address_is_already_in_use'),
+            'message' => __('messages.This_e_mail_address_is_not_registered'),
         ]);
       }
      

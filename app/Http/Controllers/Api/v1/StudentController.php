@@ -53,7 +53,7 @@ class StudentController extends Controller
      * @group Students
      * @param Request $request
      * @return \Illuminate\Http\Response
-     * @response 200 {"data":{"message":"messages.show_all_success","data":[{"id":1,"family_name":"minhaz","first_name":"Ajamaef","family_name_furigana":"demo","first_name_furigana":"demo2","email_valid":"demo@gtmail.com","email_invalid":"demo@gtmail.com","is_email_approved":1,"education_facility_id":1,"university_name":"rrrrrr","graduate_year":2020,"graduate_month":"02","self_introduction":"30","status":1,"created_at":"2022-03-17T17:53:49.000000Z","updated_at":"2022-03-17T17:53:49.000000Z","deleted_at":null,"education_facilities":{"id":1,"name":"sdfds","type":0,"created_at":null,"updated_at":null,"deleted_at":null}},{"id":2,"family_name":"minhaz","first_name":"Ajamaef","family_name_furigana":"demo","first_name_furigana":"demo2","email_valid":"demo@gtmail.com","email_invalid":"demo@gtmail.com","is_email_approved":1,"education_facility_id":1,"university_name":"rrrrrr","graduate_year":2020,"graduate_month":"02","self_introduction":"30","status":1,"created_at":"2022-03-17T17:55:46.000000Z","updated_at":"2022-03-17T17:55:46.000000Z","deleted_at":null,"education_facilities":{"id":1,"name":"sdfds","type":0,"created_at":null,"updated_at":null,"deleted_at":null}},{"id":3,"family_name":"minhaz","first_name":"Ajamaef","family_name_furigana":"demo","first_name_furigana":"demo2","email_valid":"demo@gtmail.com","email_invalid":"demo@gtmail.com","is_email_approved":1,"education_facility_id":1,"university_name":"rrrrrr","graduate_year":2020,"graduate_month":"02","self_introduction":"30","status":1,"created_at":"2022-03-17T17:56:10.000000Z","updated_at":"2022-03-17T17:56:10.000000Z","deleted_at":null,"education_facilities":{"id":1,"name":"sdfds","type":0,"created_at":null,"updated_at":null,"deleted_at":null}}]}}
+     * @response 200 {"data":{"message":"messages.show_all_success","data":[{"id":1,"family_name":"minhaz","first_name":"Ajamaef","family_name_furigana":"demo","first_name_furigana":"demo2","email_valid":"demo@gtmail.com","email_invalid":"demo@gtmail.com","is_email_approved":1,"education_facility_id":1,"graduate_year":2020,"graduate_month":"02","self_introduction":"30","status":1,"created_at":"2022-03-17T17:53:49.000000Z","updated_at":"2022-03-17T17:53:49.000000Z","deleted_at":null,"education_facilities":{"id":1,"name":"sdfds","type":0,"created_at":null,"updated_at":null,"deleted_at":null}},{"id":2,"family_name":"minhaz","first_name":"Ajamaef","family_name_furigana":"demo","first_name_furigana":"demo2","email_valid":"demo@gtmail.com","email_invalid":"demo@gtmail.com","is_email_approved":1,"education_facility_id":1,"graduate_year":2020,"graduate_month":"02","self_introduction":"30","status":1,"created_at":"2022-03-17T17:55:46.000000Z","updated_at":"2022-03-17T17:55:46.000000Z","deleted_at":null,"education_facilities":{"id":1,"name":"sdfds","type":0,"created_at":null,"updated_at":null,"deleted_at":null}},{"id":3,"family_name":"minhaz","first_name":"Ajamaef","family_name_furigana":"demo","first_name_furigana":"demo2","email_valid":"demo@gtmail.com","email_invalid":"demo@gtmail.com","is_email_approved":1,"education_facility_id":1,"graduate_year":2020,"graduate_month":"02","self_introduction":"30","status":1,"created_at":"2022-03-17T17:56:10.000000Z","updated_at":"2022-03-17T17:56:10.000000Z","deleted_at":null,"education_facilities":{"id":1,"name":"sdfds","type":0,"created_at":null,"updated_at":null,"deleted_at":null}}]}}
      */
 
     public function index(StudentRequest $request)
@@ -106,7 +106,7 @@ class StudentController extends Controller
      * @group Students
      * @urlParam id integer required Example: 1
      * @return \Illuminate\Http\Response
-     * @response 200 {"data":{"message":"messages.data_found","data":{"id":1,"family_name":"minhaz","first_name":"Ajamaef","family_name_furigana":"demo","first_name_furigana":"demo2","email_valid":"demo@gtmail.com","email_invalid":"demo@gtmail.com","is_email_approved":1,"education_facility_id":1,"university_name":"rrrrrr","graduate_year":2020,"graduate_month":"02","self_introduction":"30","status":1,"created_at":"2022-03-17T17:53:49.000000Z","updated_at":"2022-03-17T17:53:49.000000Z","deleted_at":null,"education_facilities":{"id":1,"name":"sdfds","type":0,"created_at":null,"updated_at":null,"deleted_at":null}}}}
+     * @response 200 {"data":{"message":"messages.data_found","data":{"id":1,"family_name":"minhaz","first_name":"Ajamaef","family_name_furigana":"demo","first_name_furigana":"demo2","email_valid":"demo@gtmail.com","email_invalid":"demo@gtmail.com","is_email_approved":1,"education_facility_id":1,"graduate_year":2020,"graduate_month":"02","self_introduction":"30","status":1,"created_at":"2022-03-17T17:53:49.000000Z","updated_at":"2022-03-17T17:53:49.000000Z","deleted_at":null,"education_facilities":{"id":1,"name":"sdfds","type":0,"created_at":null,"updated_at":null,"deleted_at":null}}}}
      * */
 
     public function show($id)
@@ -145,14 +145,13 @@ class StudentController extends Controller
      * @bodyParam password string required Example: 12345678
      * @bodyParam is_email_approved boolean required Example: 1
      * @bodyParam education_facility_id integer Example: 1
-     * @bodyParam university_name string Example: Dhaka University
      * @bodyParam graduate_year year Example: 2016
      * @bodyParam graduate_month string Example: 02
      * @bodyParam self_introduction string Example: Hello World
      * @bodyParam status integer  Example: 1
      * @bodyParam is_admin_read integer  0 for unread and 1 for read Example:
      * @return \Illuminate\Http\Response
-     * @response 200 {"status":"Success","message":"Created Successfully","code":201,"data":{"family_name":"Rayhan","first_name":"nbxgcjzbtafuiu","family_name_furigana":"ktllbobqzviftazunfozppr","first_name_furigana":"rlyenpaddbu","email_valid":"ariane.corwin@example.net","email_invalid":"herzog.joy@example.org","is_email_approved":true,"education_facility_id":"1","university_name":"commodi","graduate_year":null,"graduate_month":null,"self_introduction":"culpa","status":null,"updated_at":"2022-03-10T16:30:14.000000Z","created_at":"2022-03-10T16:30:14.000000Z","id":1}}
+     * @response 200 {"status":"Success","message":"Created Successfully","code":201,"data":{"family_name":"Rayhan","first_name":"nbxgcjzbtafuiu","family_name_furigana":"ktllbobqzviftazunfozppr","first_name_furigana":"rlyenpaddbu","email_valid":"ariane.corwin@example.net","email_invalid":"herzog.joy@example.org","is_email_approved":true,"education_facility_id":"1","graduate_year":null,"graduate_month":null,"self_introduction":"culpa","status":null,"updated_at":"2022-03-10T16:30:14.000000Z","created_at":"2022-03-10T16:30:14.000000Z","id":1}}
      */
 
     public function store(StudentRequest $request)
@@ -205,7 +204,7 @@ class StudentController extends Controller
      * @bodyParam self_introduction string Example: Hello World
      * @bodyParam status boolean required Example: 1
      * @return \Illuminate\Http\Response
-     * @response 200 {"data":{"message":"messages.update_success","data":{"id":1,"family_name":"ddd","first_name":"ddd","family_name_furigana":"dddd","first_name_furigana":"dddd","email_valid":"dd@gmail.com","email_invalid":"dddd@gmail.com","is_email_approved":"1","education_facility_id":"2","university_name":"rrr","graduate_year":"2022","graduate_month":"02","self_introduction":"erererer","status":"1","created_at":"2022-03-17T17:53:49.000000Z","updated_at":"2022-03-17T18:08:25.000000Z","deleted_at":null}}}
+     * @response 200 {"data":{"message":"messages.update_success","data":{"id":1,"family_name":"ddd","first_name":"ddd","family_name_furigana":"dddd","first_name_furigana":"dddd","email_valid":"dd@gmail.com","email_invalid":"dddd@gmail.com","is_email_approved":"1","education_facility_id":"2","graduate_year":"2022","graduate_month":"02","self_introduction":"erererer","status":"1","created_at":"2022-03-17T17:53:49.000000Z","updated_at":"2022-03-17T18:08:25.000000Z","deleted_at":null}}}
      *
      **/
 

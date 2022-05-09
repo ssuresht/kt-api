@@ -19,7 +19,7 @@ class FeedbacksController extends Controller
     public function index(Request $request)
     {
         try {
-            $feedback = Feedbacks::with('student:id,student_internal_id,family_name,first_name,university_name', 'companies:id,name,internal_company_id')
+            $feedback = Feedbacks::with('student:id,student_internal_id,family_name,first_name', 'companies:id,name,internal_company_id')
                 ->when($request->is_draft_or_public, function ($query, $isDraftOrPublic) {
                     $query->where('is_draft_or_public', $isDraftOrPublic == 'Y' ? '0' : '1');
                 })
@@ -30,7 +30,6 @@ class FeedbacksController extends Controller
                         $where->orWhere('family_name', 'LIKE', "%{$search}%");
                         $where->orWhere('family_name_furigana', 'LIKE', "%{$search}%");
                         $where->orWhere('first_name_furigana', 'LIKE', "%{$search}%");
-                        $where->orWhere('university_name', 'LIKE', "%{$search}%");
                     });
                     $query->orWhereHas('companies', function ($where) use ($search) {
                         $where->where('name', 'LIKE', "%{$search}%");
@@ -104,7 +103,7 @@ class FeedbacksController extends Controller
     {
         try {
             $feedback = Feedbacks::with([
-                'student:id,student_internal_id,family_name,first_name,university_name',
+                'student:id,student_internal_id,family_name,first_name',
                 'companies:id,name,internal_company_id',
             ])
                 ->find($id);

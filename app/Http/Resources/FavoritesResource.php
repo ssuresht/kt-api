@@ -24,6 +24,7 @@ class FavoritesResource extends JsonResource
             $internship['target_grade_value'] = collect(config('constants.target_grade'))->where('id', $internship['target_grade'])->first() ?? '-';
             $internship['wage_value'] = collect(config('constants.wage'))->where('id', $internship['wage'])->first() ?? '-';
             $internship['seo_featured_image'] = Storage::disk('s3')->url($internship['seo_featured_image']);
+            $internship['seo_featured_image_thumbnail'] = Storage::disk('s3')->url($internship['seo_featured_image_thumbnail']);
             if(isset($internship['company']) && $internship['company']['logo_img']) {
                 $internship['company']['logo_img'] = Storage::disk('s3')->url($internship['company']['logo_img']);
             }
